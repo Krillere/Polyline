@@ -331,7 +331,12 @@ private func extractNextChunk(_ encodedString: inout String.UnicodeScalarView) t
         let currentCharacterValue = Int32(encodedString[currentIndex].value)
         if isSeparator(currentCharacterValue) {
             let extractedScalars = encodedString[encodedString.startIndex...currentIndex]
-            encodedString = encodedString[encodedString.index(after: currentIndex)..<encodedString.endIndex]
+            
+            #if swift(>=4.0)
+                encodedString = String.UnicodeScalarView(encodedString[encodedString.index(after: currentIndex)..<encodedString.endIndex])
+            #else
+                encodedString = encodedString[encodedString.index(after: currentIndex)..<encodedString.endIndex]
+            #endif
             
             return String(extractedScalars)
         }
